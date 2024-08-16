@@ -47,8 +47,8 @@ const AdminHead = ({ setActiveSection }) => {
         </button>
 
         <div className="flex flex-col">
-          <div className="text-lg md:text-2xl font-bold tracking-wide">CECT PORTAL</div>
-          <div className="text-xs md:text-sm italic">Credit Equivalence and Credit Transfer</div>
+          <div className="text-lg md:text-2xl font-bold tracking-wide">ADMIN DASHBOARD</div>
+          <div className="text-xs md:text-sm italic">Chennai Siddha Viddhai</div>
         </div>
       </div>
       <div ref={dropdownRef} className="relative">
