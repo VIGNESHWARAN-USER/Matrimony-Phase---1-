@@ -82,7 +82,7 @@
     const handleSaveProfileDetails = async (e) => {
       e.preventDefault();
       try {
-        const res = await axios.post('http://localhost:3000/updateProfileDetails', {
+        const res = await axios.post('https://matrimony-os38.onrender.com/updateProfileDetails', {
           User_id: user.User_id,
           name: user.name,
           dob: user.dob,
@@ -103,7 +103,7 @@
     const handleSaveCareerDetails = async (e) => {
       e.preventDefault();
       try {
-        const res = await axios.post('http://localhost:3000/updateCareerDetails', {
+        const res = await axios.post('https://matrimony-os38.onrender.com/updateCareerDetails', {
           User_id: user.User_id,
           highest_degree: user.highest_degree,
           employed_in: user.employed_in,
@@ -123,7 +123,7 @@
     const handleSaveLifestyleFamily = async (e) => {
       e.preventDefault();
       try {
-        const res = await axios.post('http://localhost:3000/updateFamilyDetails', {
+        const res = await axios.post('https://matrimony-os38.onrender.com/updateFamilyDetails', {
           User_id: user.User_id,
           family_type: user.family_type,
           father_occupation: user.father_occupation,
@@ -150,7 +150,7 @@
         formData.append('User_id', user.User_id);
         formData.append('image', image); // Add image to form data
         try {
-          const res = await axios.post('http://localhost:3000/uploadImage', formData, {
+          const res = await axios.post('https://matrimony-os38.onrender.com/uploadImage', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },

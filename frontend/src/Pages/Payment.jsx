@@ -51,7 +51,7 @@ const UpiPage = () => {
    
     try {
       const res = await axios.post(
-        "http://localhost:3000/uploadPaymentImage",
+        "https://matrimony-os38.onrender.com/uploadPaymentImage",
         {User_id:user.User_id, tid:tid});
       alert("ID sent successfully");
       setPopupVisible(false);
