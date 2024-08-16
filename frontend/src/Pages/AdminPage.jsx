@@ -15,12 +15,12 @@ import {
   LabelList
 } from 'recharts';
 import Requests from './Requests';
+import AdminHead from './AdminHead';
 
 const AdminPage = () => {
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('AdminDashboard');
   const [details, setDetails] = useState([]);
-  
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const AdminPage = () => {
     const registeredUsers = details.length;
     const premiumUsers = details.filter(user => user.status === 'active').length;
     const nonPremiumUsers = details.filter(user => user.status === 'inactive').length;
-    const waitlistUsers = details.filter(user=> user.status === 'waiting').length;
+    const waitlistUsers = details.filter(user => user.status === 'waiting').length;
 
     return [
       { name: 'Registered Users', count: registeredUsers },
@@ -77,7 +77,7 @@ const AdminPage = () => {
       <table className="min-w-full bg-white">
         <thead>
           <tr>
-          <th className="py-2 px-4 border-b">User ID</th>
+            <th className="py-2 px-4 border-b">User ID</th>
             <th className="py-2 px-4 border-b">Name</th>
             <th className="py-2 px-4 border-b">Email</th>
             <th className="py-2 px-4 border-b">Status</th>
@@ -102,7 +102,7 @@ const AdminPage = () => {
   const sections = {
     AdminDashboard: (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-        <ResponsiveContainer width="120%" height={400}>
+        <ResponsiveContainer width="100%" height={400}>
           <BarChart data={getCounts()}>
             <XAxis dataKey="name" />
             <YAxis />
@@ -145,29 +145,10 @@ const AdminPage = () => {
 
   return (
     <div className="flex flex-col md:flex-row h-screen">
-      <div className="bg-gray-800 text-white w-full md:w-1/4 h-full p-4">
-        <h2 className="text-4xl font-semibold mb-6">Matrimony Admin</h2>
-        <ul className='flex flex-col'>
-          <li className={`py-2 ${activeSection === 'AdminDashboard' ? 'p-2 font-semibold bg-gray-600 rounded-lg w-64' : ''}`}>
-            <button onClick={() => setActiveSection('AdminDashboard')} className="w-full m-4 text-lg font-semibold text-left">Dashboard</button>
-          </li>
-          <li className={`py-2 ${activeSection === 'RegisteredUsers' ? 'p-2 font-semibold bg-gray-600 rounded-lg w-64' : ''}`}>
-            <button onClick={() => setActiveSection('RegisteredUsers')} className="w-full m-4 text-lg font-semibold text-left">Registered Users</button>
-          </li>
-          <li className={`py-2 ${activeSection === 'PremiumUsers' ? 'p-2 font-semibold bg-gray-600 rounded-lg w-64' : ''}`}>
-            <button onClick={() => setActiveSection('PremiumUsers')} className="w-full m-4 text-lg font-semibold text-left">Premium Users</button>
-          </li>
-          <li className={`py-2 ${activeSection === 'NonPremiumUsers' ? 'p-2 font-semibold bg-gray-600 rounded-lg w-64' : ''}`}>
-            <button onClick={() => setActiveSection('NonPremiumUsers')} className="w-full m-4 text-lg font-semibold text-left">Non-Premium Users</button>
-          </li>
-          <li className={`py-2 ${activeSection === 'Requests' ? 'p-2 font-semibold bg-gray-600 rounded-lg w-64' : ''}`}>
-            <button onClick={() => setActiveSection('Requests')} className="w-full m-4 text-lg font-semibold text-left">Requests</button>
-          </li>
-        </ul>
-      </div>
-      <div className="bg-gray-100 flex-1 p-6 overflow-y-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-semibold">{activeSection.replace(/([A-Z])/g, ' $1').trim()}</h2>
+      <AdminHead setActiveSection = {setActiveSection}/>
+      <div className="bg-gray-100 flex-1 p-6 overflow-y-auto ">
+        <div className="flex justify-between items-center mb-4 flex-col md:flex-row">
+          <h2 className="text-2xl font-semibold mb-4 md:mb-0">{activeSection.replace(/([A-Z])/g, ' $1').trim()}</h2>
           <button onClick={handleLogout} className="bg-red-500 text-white py-2 px-4 rounded">Logout</button>
         </div>
         {activeSection !== 'AdminDashboard' && activeSection !== 'ViewDetails' && (
