@@ -9,51 +9,53 @@ const SignUp = () => {
     email: '',
     password: ''
   });
-  const [errors, setErrors] = useState({
-    name: '',
-    email: '',
-    password: ''
-  });
+  
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   };
-
+  const [err, seterr] = useState('')
   const handleSub = (e) => {
     e.preventDefault();
 
     let valid = true;
-    let errors = { name: '', email: '', password: '' };
+    
 
     if (formData.name === '') {
-      errors.name = 'Name is required';
+      seterr('Name is required');
       valid = false;
     }
 
     if (!validateEmail(formData.email)) {
-      errors.email = 'Invalid email format';
+      seterr('Invalid email format');
       valid = false;
     }
 
     if (formData.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
+      seterr('Password must be at least 6 characters');
       valid = false;
     }
 
-    setErrors(errors);
+    seterr(err);
 
     if (valid) {
-      axios.post('https://matrimony-os38.onrender.com/signup', formData)
-        .then(response => {
-          navigate('../login')
-          console.log(response.data);
-        })
-        .catch(error => {
-          // Handle error
-          console.error(error);
-        });
-    }
+      
+        axios.post('http://matrimony-os38.onrender.com/signup', formData)
+          .then(response => {
+            console.log(response.data);
+              navigate('../login');
+          })
+          .catch(error => {
+            console.error(error);
+            if (error.response && error.response.data) {
+              seterr(error.response.data);
+            } else {
+              seterr('An error occurred. Please try again.' );
+            }
+          });
+      }
+    
   };
 
   const handleChange = (e) => {
@@ -77,7 +79,7 @@ const SignUp = () => {
               className="w-full p-4 border-none bg-gray-100 outline-none rounded-md"
               required 
             />
-            {errors.name && <div className="text-red-500 text-sm">{errors.name}</div>}
+            
           </div>
           <div className="input-group">
             <input 
@@ -90,7 +92,7 @@ const SignUp = () => {
               className="w-full p-4 border-none bg-gray-100 outline-none rounded-md"
               required 
             />
-            {errors.email && <div className="text-red-500 text-sm">{errors.email}</div>}
+            
           </div>
           <div className="input-group">
             <input 
@@ -103,7 +105,7 @@ const SignUp = () => {
               className="w-full p-4 border-none bg-gray-100 outline-none rounded-md"
               required 
             />
-            {errors.password && <div className="text-red-500 text-sm">{errors.password}</div>}
+          <div className="text-red-500 text-sm">{err}</div>
           </div>
           <button 
             type="submit" 

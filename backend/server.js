@@ -228,8 +228,8 @@ app.post('/signup', async (req, res) => {
               }
               
               // Insert into payment table
-            const insertLifestyleFamilyQuery = 'INSERT INTO payment (User_id) VALUES (?)';
-            db.query(insertLifestyleFamilyQuery, [userId], (err, result) => {
+            const insertLifestyleFamilyQuery1 = 'INSERT INTO payment (User_id) VALUES (?)';
+            db.query(insertLifestyleFamilyQuery1, [userId], (err, result) => {
               if (err) {
                 console.error('Error inserting lifestyle family details:', err);
                 return res.status(500).send('Internal Server Error');
@@ -341,7 +341,9 @@ app.post('/uploadPaymentImage', async (req, res) => {
   
   // Fetch existing image and delete it if it exists
   const getUserQuery = 'UPDATE payment SET transaction_id = ? WHERE User_id = ?';
+  const getUserQuery1 = 'UPDATE lifestyle_family SET status = ? WHERE User_id = ?';
   db.query(getUserQuery, [tid,User_id], (err, results) => {
+    db.query(getUserQuery1, ['waiting',User_id], (err, results) => {
     if (err) {
       console.error('Error fetching user image:', err);
       return res.status(500).send('Internal Server Error');
@@ -349,7 +351,7 @@ app.post('/uploadPaymentImage', async (req, res) => {
     res.send('Transaction send successfully')
   });
 });
-
+});
 app.post('/updateProfileDetails', async (req, res) => {
   const { User_id, name, mother_tongue, marital_status, dob, gender } = req.body;
 
