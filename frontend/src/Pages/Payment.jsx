@@ -11,8 +11,27 @@ const UpiPage = () => {
     User_id: "",
     name: "",
   });
+  
   const [isOpen, setIsOpen] = useState(false);
-
+  const [postImage, setpostImage] = useState('')
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0]; 
+    const base64 = convertionOfImage(file);
+    setpostImage({...postImage, myfile: base64, User_id : user.User_id})
+  };
+  console.log(postImage.myfile)
+  function convertionOfImage(file){
+    return new Promise((ressole, reject)=>{
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64String = reader.result.replace('data:', '').replace(/^.+,/, '');
+        setpostImage({...postImage, myfile: base64String, User_id : user.User_id});
+      };      
+      if (file) {
+        reader.readAsDataURL(file);
+      }
+    })
+  }
   useEffect(() => {
     const fetchUserDetails = async () => {
       try {
@@ -42,18 +61,15 @@ const UpiPage = () => {
   const handleProceedClick = () => {
     setPopupVisible(true);
   };
-
+  console.log(postImage.myfile)
   const handleSubmitClick = async () => {
     
-    const formData = new FormData();
-    formData.append("User_id", user.User_id);
-    formData.append("tid", tid);
    
     try {
       const res = await axios.post(
-        "https://matrimony-os38.onrender.com/uploadPaymentImage",
-        {User_id:user.User_id, tid:tid});
-      alert("ID sent successfully");
+        "http://localhost:3000/uploadPaymentImage",
+        {User_id:user.User_id, tid:tid, image: postImage.myfile});
+      alert("Hi",res.data.msg);
       setPopupVisible(false);
     } catch (error) {
       console.error("Error uploading image:", error);
@@ -204,6 +220,15 @@ const UpiPage = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md text-center">
             <h2 className="text-xl font-semibold mb-4">Payment Confirmation</h2>
+                  <div className="mt-4">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="border border-gray-300 rounded-lg p-2"
+                    />
+                    
+                  </div>
             <input
               placeholder="Enter transaction ID"
               type="text"

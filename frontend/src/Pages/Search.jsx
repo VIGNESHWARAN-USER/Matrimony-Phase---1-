@@ -90,14 +90,14 @@ const Header = () => {
     );
 };
 
-const ProfileCard = ({ profile, onClick }) => {
+const ProfileCard = ({ profile, onClick,userStatus }) => {
     return (
         <div
             className="flex flex-col md:flex-row items-center bg-white border border-gray-300 rounded-lg p-4 md:p-10 mb-12 cursor-pointer transition-shadow duration-300 shadow-md hover:shadow-lg max-w-full w-[90%] md:w-[800px]"
             onClick={onClick}
         >
             <div className="flex justify-center md:justify-start mb-4 md:mb-0">
-                <img src={profile.image || user} alt="Profile" className="w-32 h-32 rounded-full object-cover" />
+                {(userStatus === 'active' && profile.image)? (<img  src={'data:image/jpeg;base64,'+profile.image || user} alt="Profile" className="w-32 h-32 rounded-full object-cover" />):(<img  src={user} alt="Profile" className="w-32 h-32 rounded-full object-cover" />)}
             </div>
             <div className="text-center md:text-left md:ml-6">
                 <h5 className="text-xl font-bold text-yellow-900">{profile.name}</h5>
@@ -135,7 +135,7 @@ const Modal = ({ profile, isOpen, onClose }) => {
                 </button>
                 <div className="flex flex-col items-center">
                     <img 
-                        src={profile.image || user} 
+                        src={(profile.image)?('data:image/jpeg;base64,'+profile.image):(user)} 
                         alt="Profile" 
                         className="w-32 h-32 rounded-full object-cover mb-4"
                     />
@@ -162,8 +162,10 @@ const MatrimonySearch = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedProfile, setSelectedProfile] = useState(null);
     const navigate = useNavigate();
-
+    const [user, setuser] = useState({})
     useEffect(() => {
+        const response = JSON.parse(localStorage.getItem('user'));
+        setuser(response);
         axios.get('https://matrimony-os38.onrender.com/getDetails')
             .then(response => {
                 setDetails(response.data);
@@ -238,6 +240,7 @@ const MatrimonySearch = () => {
                             <ProfileCard
                                 key={profile.id}
                                 profile={profile}
+                                userStatus={userStatus}
                                 onClick={() => handleProfileClick(profile)}
                             />
                         ))

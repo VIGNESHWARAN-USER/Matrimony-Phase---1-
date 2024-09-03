@@ -24,7 +24,7 @@ const AdminPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    axios.get('https://matrimony-os38.onrender.com/getDetails')
+    axios.get('http://localhost:3000/getDetails')
       .then(response => {
         setDetails(response.data);
         console.log(response.data);
@@ -49,8 +49,8 @@ const AdminPage = () => {
   };
 
   const getGenderCounts = () => {
-    const maleCount = details.filter(user => user.gender === 'male').length;
-    const femaleCount = details.filter(user => user.gender === 'female').length;
+    const maleCount = details.filter(user => user.gender === 'Male').length;
+    const femaleCount = details.filter(user => user.gender === 'Female').length;
 
     return [
       { name: 'Male', count: maleCount },

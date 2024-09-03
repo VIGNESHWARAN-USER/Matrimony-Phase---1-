@@ -7,7 +7,8 @@ const SignUp = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    password: ''
+    password: '',
+    gender:''
   });
   
 
@@ -41,7 +42,7 @@ const SignUp = () => {
 
     if (valid) {
       
-        axios.post('http://matrimony-os38.onrender.com/signup', formData)
+        axios.post('http://localhost:3000/signup', formData)
           .then(response => {
             console.log(response.data);
               navigate('../login');
@@ -107,6 +108,20 @@ const SignUp = () => {
             />
           <div className="text-red-500 text-sm">{err}</div>
           </div>
+          <div className="input-group">
+  <select
+    id="gender" 
+    name="gender" 
+    value={formData.gender}
+    onChange={handleChange}
+    className="w-full p-4 border-none bg-gray-100 outline-none rounded-md"
+    required 
+  >
+    <option value="" disabled>Select Gender</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+  </select>      
+</div>
           <button 
             type="submit" 
             className="w-full py-4 bg-amber-500 text-white font-bold rounded-md hover:bg-transparent hover:text-black border border-transparent hover:border-gray-400 transition duration-300"

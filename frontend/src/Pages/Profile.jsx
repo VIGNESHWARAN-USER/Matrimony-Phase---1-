@@ -1,20 +1,6 @@
   import React, { useState, useEffect } from 'react';
   import axios from 'axios';
 
-  // This component is responsible for displaying the user's profile image.
-  const ImageDisplay = ({ imagepath }) => {
-    return (
-      <div className="mt-4">
-        {imagepath ? (
-          <img src={imagepath} alt="Profile" className="w-32 h-32 object-cover rounded-full shadow-md" />
-        ) : (
-          <p>No image uploaded</p>
-        )}
-      </div>
-    );
-  };
-
-  // Main component for user profile management.
   const UserProfile = () => {
     const [user, setUser] = useState({
       User_id: '',
@@ -39,23 +25,26 @@
       status: '',
       image: '',
     });
-
-    const [image, setImage] = useState(null); // Image state for uploading
-    const [isEditing, setIsEditing] = useState(false); // Editing state for profile details
-    const [isEditing1, setIsEditing1] = useState(false); // Editing state for image
-    const [activeState, setActiveState] = useState('ProfileDetails'); // Current active section of the profile
-    const [imagepath, setImagepath] = useState(''); // Path to the uploaded image
-
+    console.log(user.User_id)
+    const [isEditing, setIsEditing] = useState(false); 
+    const [isEditing1, setIsEditing1] = useState(false); 
+    const [activeState, setActiveState] = useState('ProfileDetails');
     useEffect(() => {
       const fetchUserDetails = async () => {
         try {
-          const response = JSON.parse(localStorage.getItem('user')); // Fetch user data from local storage
-          setUser(response);
+          const response = JSON.parse(localStorage.getItem('user'));
+          await setUser(response);
+          if (response && response.User_id) {
+            const res = await axios.get(`http://localhost:3000/getImage?User_id=${response.User_id}`);
+            const base64Image = res.data.image;
+            setpostImage({ ...postImage, myfile: base64Image });
+            console.log(postImage.myfile);
+          }
         } catch (error) {
           console.error('Error fetching user details:', error);
         }
       };
-
+    
       fetchUserDetails();
     }, []);
 
@@ -75,10 +64,15 @@
       });
     };
 
-    const handleImageChange = (e) => {
-      setImage(e.target.files[0]); // Set selected image for upload
-    };
+    const [postImage, setpostImage] = useState('')
 
+    const handleImageChange = async (e) => {
+      const file = e.target.files[0]; 
+      const base64 = convertionOfImage(file);
+      setpostImage({...postImage, myfile: base64, User_id : user.User_id})
+
+    };
+  
     const handleSaveProfileDetails = async (e) => {
       e.preventDefault();
       try {
@@ -90,9 +84,9 @@
           mother_tongue: user.mother_tongue,
           gender: user.gender,
         });
-        setIsEditing(false); // Disable editing mode
+        setIsEditing(false);
         setUser(res.data.updatedDetails);
-        localStorage.setItem('user', JSON.stringify(res.data.updatedDetails)); // Save updated details to local storage
+        localStorage.setItem('user', JSON.stringify(res.data.updatedDetails));
         alert('Profile updated successfully');
       } catch (error) {
         console.error('Error updating profile:', error);
@@ -144,27 +138,36 @@
       }
     };
 
+    function convertionOfImage(file){
+      return new Promise((ressole, reject)=>{
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64String = reader.result.replace('data:', '').replace(/^.+,/, '');
+          setpostImage({...postImage, myfile: base64String, User_id : user.User_id});
+        };
+
+        console.log(postImage)
+        
+        if (file) {
+          reader.readAsDataURL(file);
+        }
+      })
+    }
     const handleImageUpload = async () => {
-      if (image) {
-        const formData = new FormData();
-        formData.append('User_id', user.User_id);
-        formData.append('image', image); // Add image to form data
+      if (postImage) {
         try {
-          const res = await axios.post('https://matrimony-os38.onrender.com/uploadImage', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-          setImagepath(res.data.imageUrl); // Set image path to display
-          alert('Image uploaded successfully');
+          const res = await axios.post('http://localhost:3000/uploadImage',postImage);
+          
+          alert(res.data.msg);
         } catch (error) {
           console.error('Error uploading image:', error);
           alert('Error uploading image');
         } finally {
-          setIsEditing1(false); // Disable image editing mode
+          setIsEditing1(false); 
         }
       }
     };
+    
 
     const profileSections = {
       ProfileDetails: (
@@ -505,24 +508,36 @@
         </div>
       ),
     };
-
     return (
       <div className='bg-gradient-to-br from-amber-300 via-amber-100 to-amber-300 bg-opacity-25 p-6'>
         <div className="container max-w-screen-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
             <div className="col-span-1">
-              <h2 className="text-xl font-semibold mb-6 text-gray-800">User Profile</h2>
+            <h2 className="text-xl font-semibold mb-6 text-gray-800">
+  {user.status === 'active' ? (
+    <p style={{ color: 'green' }}>Active User</p>
+  ) : (
+    "Inactive User"
+  )}
+</h2>
+
               <div className="flex flex-col items-center justify-center">
-                <ImageDisplay imagepath={imagepath || user.image} />
+              <div className="mt-4">
+        {postImage.myfile? (
+          <img src={'data:image/jpeg;base64,'+postImage.myfile} alt="Profile" className="w-32 h-32 object-cover rounded-full shadow-md" />
+        ) : (
+          <p>No image uploaded</p>
+        )}
+
+      </div>
                 <button
+
                   type="button"
                   onClick={handleEdit1}
-                  disabled
                   className="mt-4 bg-amber-600 text-white py-2 px-4 rounded-lg hover:bg-amber-700 focus:outline-none focus:ring focus:ring-amber-300"
                 >
                   {isEditing1 ? 'Change Profile Picture' : 'Edit Profile Picture'}
                 </button>
-                <p className='text-amber-700 mt-4'>Profile uploading feature is under construction</p>
                 {isEditing1 && (
                   <div className="mt-4">
                     <input
