@@ -48,7 +48,7 @@ const Requests = ({ user }) => {
 
   const fetchUserImage = async (User_id) => {
     try {
-      const res = await axios.get(`http://localhost:3000/getImage?User_id=${User_id}`);
+      const res = await axios.get(`https://matrimony-os38.onrender.com/getImage?User_id=${User_id}`);
       setBase64Image(res.data.image);
     } catch (error) {
       console.error('Error fetching user image:', error);
@@ -72,7 +72,7 @@ const Requests = ({ user }) => {
           <img
             src={'data:image/jpeg;base64,' + base64Image}
             alt="Screenshot"
-            className="w-32 h-32 rounded-full object-cover mb-4"
+            className="w-44 h-56  object-cover mb-4"
           />
         )}
         <p><b>Transaction ID:</b> {selectedUser.transaction_id}</p>

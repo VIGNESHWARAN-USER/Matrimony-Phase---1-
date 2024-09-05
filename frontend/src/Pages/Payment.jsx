@@ -63,19 +63,21 @@ const UpiPage = () => {
   };
   console.log(postImage.myfile)
   const handleSubmitClick = async () => {
-    
-   
+    if(!postImage.myfile || !tid){
+      alert('Please upload the details');
+    }
+    else{
     try {
       const res = await axios.post(
-        "http://localhost:3000/uploadPaymentImage",
+        "https://matrimony-os38.onrender.com/uploadPaymentImage",
         {User_id:user.User_id, tid:tid, image: postImage.myfile});
-      alert("Hi",res.data.msg);
+      alert(res.data.msg);
       setPopupVisible(false);
     } catch (error) {
       console.error("Error uploading image:", error);
       alert("Error uploading image");
     }
-  };
+  }};
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);

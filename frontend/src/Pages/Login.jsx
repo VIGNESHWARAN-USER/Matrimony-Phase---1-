@@ -14,6 +14,7 @@ const Login = () => {
     form: ''
   });
 
+  const [loading, setLoading] = useState(false); // Loading state
   const [OTP, setOTP] = useState('');
 
   const navigate = useNavigate();
@@ -49,7 +50,9 @@ const Login = () => {
       console.log("Generated OTP:", OTP);
       console.log(formData.email);
       try {
+        setLoading(true); // Start loading
         const response = await axios.post('https://matrimony-os38.onrender.com/send_recovery_email', { OTP, recipient_email: formData.email });
+        setLoading(false); // Stop loading
         console.log(response.data.success);
         if (response.data.success) {
           console.log("Working");
@@ -58,6 +61,7 @@ const Login = () => {
           setErrors({ ...errors, form: error.response.data.msg });
         }
       } catch (error) {
+        setLoading(false); // Stop loading
         setErrors({ ...errors, form: 'An error occurred. Please try again.' });
       }
     } else {
@@ -70,8 +74,10 @@ const Login = () => {
     e.preventDefault();
 
     if (validateForm()) {
-      axios.post('http://localhost:3000/login', formData)
+      setLoading(true); // Start loading
+      axios.post('https://matrimony-os38.onrender.com/login', formData)
         .then(response => {
+          setLoading(false); // Stop loading
           // Store user details in local storage
           localStorage.setItem('user', JSON.stringify(response.data));
           console.log(response.data);
@@ -82,6 +88,7 @@ const Login = () => {
           }
         })
         .catch(error => {
+          setLoading(false); // Stop loading
           console.error(error);
           if (error.response && error.response.data) {
             setErrors({ ...errors, form: error.response.data.msg });
@@ -128,13 +135,15 @@ const Login = () => {
             />
             {errors.password && <div className="text-red-500 text-sm">{errors.password}</div>}
           </div>
+          {errors.form && <div className="text-red-500 mt-2">{errors.form}</div>}
           <button 
             type="submit" 
-            className="w-full py-4 bg-amber-500 text-white font-bold rounded-md hover:bg-transparent hover:text-black border border-transparent hover:border-gray-400 transition duration-300"
+            className={`w-full py-4 bg-amber-500 text-white font-bold rounded-md hover:bg-transparent hover:text-black border border-transparent hover:border-gray-400 transition duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={loading} // Disable button while loading
           >
-            Get Started
+            {loading ? 'Logging In...' : 'Get Started'}
           </button>
-          {errors.form && <div className="text-red-500 text-center mt-2">{errors.form}</div>}
+          
           <p className="text-center text-black mt-4">
             Forget your password? <Link onClick={navigateToOtp} className="text-amber-500 hover:underline">Forget password</Link>
           </p>

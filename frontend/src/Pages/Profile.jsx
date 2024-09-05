@@ -35,7 +35,7 @@
           const response = JSON.parse(localStorage.getItem('user'));
           await setUser(response);
           if (response && response.User_id) {
-            const res = await axios.get(`http://localhost:3000/getImage?User_id=${response.User_id}`);
+            const res = await axios.get(`https://matrimony-os38.onrender.com/getImage?User_id=${response.User_id}`);
             const base64Image = res.data.image;
             setpostImage({ ...postImage, myfile: base64Image });
             console.log(postImage.myfile);
@@ -156,7 +156,7 @@
     const handleImageUpload = async () => {
       if (postImage) {
         try {
-          const res = await axios.post('http://localhost:3000/uploadImage',postImage);
+          const res = await axios.post('https://matrimony-os38.onrender.com/uploadImage',postImage);
           
           alert(res.data.msg);
         } catch (error) {

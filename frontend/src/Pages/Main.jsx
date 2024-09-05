@@ -138,8 +138,6 @@ const Main = () => {
             <div className="description absolute top-1/2 left-3/4 transform -translate-x-1/2 -translate-y-1/2 text-left font-light px-4 md:px-0">
                 <h2 className="text-5xl text-gray-800 md:font-bold">Hello And <span className="text-amber-500">World</span></h2>
                 <h2 className="text-4xl text-gray-800">Plan Your <span className="text-amber-500">Dream Partner</span> With Us</h2>
-                <br />
-                <Link to="/signup" className="bg-amber-500 text-white py-2 px-4 rounded-md inline-block hover:bg-white hover:text-black transition-all">Register Now</Link>
             </div>    
         </div>
     );

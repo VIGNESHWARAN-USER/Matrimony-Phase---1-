@@ -8,55 +8,56 @@ const SignUp = () => {
     name: '',
     email: '',
     password: '',
-    gender:''
+    gender: ''
   });
-  
+  const [loading, setLoading] = useState(false); // Loading state
+  const [err, setErr] = useState('');
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
   };
-  const [err, seterr] = useState('')
+
   const handleSub = (e) => {
     e.preventDefault();
 
     let valid = true;
-    
+    setErr('');
 
     if (formData.name === '') {
-      seterr('Name is required');
+      setErr('Name is required');
       valid = false;
     }
 
     if (!validateEmail(formData.email)) {
-      seterr('Invalid email format');
+      setErr('Invalid email format');
       valid = false;
     }
 
     if (formData.password.length < 6) {
-      seterr('Password must be at least 6 characters');
+      setErr('Password must be at least 6 characters');
       valid = false;
     }
 
-    seterr(err);
-
     if (valid) {
-      
-        axios.post('http://localhost:3000/signup', formData)
-          .then(response => {
-            console.log(response.data);
-              navigate('../login');
-          })
-          .catch(error => {
-            console.error(error);
-            if (error.response && error.response.data) {
-              seterr(error.response.data);
-            } else {
-              seterr('An error occurred. Please try again.' );
-            }
-          });
-      }
-    
+      setLoading(true); // Start loading
+
+      axios.post('https://matrimony-os38.onrender.com/signup', formData)
+        .then(response => {
+          console.log(response.data);
+          setLoading(false); // Stop loading
+          navigate('../login');
+        })
+        .catch(error => {
+          console.error(error);
+          setLoading(false); // Stop loading
+          if (error.response && error.response.data) {
+            setErr(error.response.data);
+          } else {
+            setErr('An error occurred. Please try again.');
+          }
+        });
+    }
   };
 
   const handleChange = (e) => {
@@ -80,7 +81,6 @@ const SignUp = () => {
               className="w-full p-4 border-none bg-gray-100 outline-none rounded-md"
               required 
             />
-            
           </div>
           <div className="input-group">
             <input 
@@ -93,7 +93,6 @@ const SignUp = () => {
               className="w-full p-4 border-none bg-gray-100 outline-none rounded-md"
               required 
             />
-            
           </div>
           <div className="input-group">
             <input 
@@ -106,32 +105,32 @@ const SignUp = () => {
               className="w-full p-4 border-none bg-gray-100 outline-none rounded-md"
               required 
             />
-          <div className="text-red-500 text-sm">{err}</div>
+            <div className="text-red-500 text-sm">{err}</div>
           </div>
           <div className="input-group">
-  <select
-    id="gender" 
-    name="gender" 
-    value={formData.gender}
-    onChange={handleChange}
-    className="w-full p-4 border-none bg-gray-100 outline-none rounded-md"
-    required 
-  >
-    <option value="" disabled>Select Gender</option>
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-  </select>      
-</div>
+            <select
+              id="gender" 
+              name="gender" 
+              value={formData.gender}
+              onChange={handleChange}
+              className="w-full p-4 border-none bg-gray-100 outline-none rounded-md"
+              required 
+            >
+              <option value="" disabled>Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>      
+          </div>
           <button 
             type="submit" 
-            className="w-full py-4 bg-amber-500 text-white font-bold rounded-md hover:bg-transparent hover:text-black border border-transparent hover:border-gray-400 transition duration-300"
+            className={`w-full py-4 bg-amber-500 text-white font-bold rounded-md hover:bg-transparent hover:text-black border border-transparent hover:border-gray-400 transition duration-300 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={loading} // Disable button while loading
           >
-            Get Started
+            {loading ? 'Signing Up...' : 'Get Started'}
           </button>
           <p className="text-center text-black mt-4">
             Already have an account? <Link to="../login" className="text-amber-500">Log in.</Link>
           </p>
-          
         </form>
       </div>
     </div>

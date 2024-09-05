@@ -118,7 +118,7 @@ const Modal = ({ profile, isOpen, onClose }) => {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg max-w-md mx-auto relative">
+            <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg mx-auto relative">
                 <button 
                     className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
                     onClick={onClose}
@@ -135,17 +135,37 @@ const Modal = ({ profile, isOpen, onClose }) => {
                 </button>
                 <div className="flex flex-col items-center">
                     <img 
-                        src={(profile.image)?('data:image/jpeg;base64,'+profile.image):(user)} 
+                        src={profile.image ? `data:image/jpeg;base64,${profile.image}` : user} 
                         alt="Profile" 
                         className="w-32 h-32 rounded-full object-cover mb-4"
                     />
-                    <h3 className="text-xl font-bold mb-2">{profile.name}</h3>
-                    <p className="text-gray-600 mb-2">Email: {profile.email}</p>
-                    <p className="text-gray-600 mb-2">Contact: {profile.contact_address}</p>
-                    <p className="text-gray-600 mb-2">DOB: {profile.dob}</p>
-                    <p className="text-gray-600 mb-2">Annual Income: {profile.annual_income}</p>
-                    <p className="text-gray-600 mb-2">Occupation: {profile.employed_in}</p>
-                    <p className="text-gray-600 mb-2">About Family: {profile.about_family}</p>
+                    <h3 className="text-2xl font-bold mb-2">{profile.name}</h3>
+                    <p className="text-gray-500 mb-4">{profile.gender}, {profile.marital_status}</p>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                    <div>
+                        <p className="text-gray-700"><strong>User ID:</strong> {profile.User_id}</p>
+                        <p className="text-gray-700"><strong>Email:</strong> {profile.email}</p>
+                        <p className="text-gray-700"><strong>Mother Tongue:</strong> {profile.mother_tongue}</p>
+                        <p className="text-gray-700"><strong>Date of Birth:</strong> {profile.dob}</p>
+                        <p className="text-gray-700"><strong>Highest Degree:</strong> {profile.highest_degree}</p>
+                        <p className="text-gray-700"><strong>Occupation:</strong> {profile.employed_in}</p>
+                        <p className="text-gray-700"><strong>Annual Income:</strong> {profile.annual_income}</p>
+                    </div>
+                    <div>
+                        <p className="text-gray-700"><strong>Express Yourself:</strong> {profile.express_yourself}</p>
+                        <p className="text-gray-700"><strong>Family Type:</strong> {profile.family_type}</p>
+                        <p className="text-gray-700"><strong>Father's Occupation:</strong> {profile.father_occupation}</p>
+                        <p className="text-gray-700"><strong>Mother's Occupation:</strong> {profile.mother_occupation}</p>
+                        <p className="text-gray-700"><strong>Brothers:</strong> {profile.brother}</p>
+                        <p className="text-gray-700"><strong>Sisters:</strong> {profile.sister}</p>
+                        <p className="text-gray-700"><strong>Family Living Location:</strong> {profile.family_living_location}</p>
+                    </div>
+                </div>
+                <div className="mt-4">
+                    <p className="text-gray-700"><strong>Contact Address:</strong> {profile.contact_address}</p>
+                    <p className="text-gray-700"><strong>About Family:</strong> {profile.about_family}</p>
+                    <p className="text-gray-700"><strong>Status:</strong> {profile.status}</p>
                 </div>
             </div>
         </div>

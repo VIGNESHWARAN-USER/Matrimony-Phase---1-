@@ -404,7 +404,7 @@ app.post('/uploadPaymentImage', async (req, res) => {
   console.log(image)
   // Check for missing image or User_id
   if (!image || !User_id) {
-    return res.status(400).json({ msg: 'Missing image or User_id' });
+    return res.json({ msg: 'Missing image or User_id' });
   }
 
   // Calculate image size
